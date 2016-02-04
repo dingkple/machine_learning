@@ -1,0 +1,224 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%% ICML 2015 EXAMPLE LATEX SUBMISSION FILE %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Use the following line _only_ if you're still using LaTeX 2.09.
+%\documentstyle[icml2015,epsf,natbib]{article}
+% If you rely on Latex2e packages, like most moden people use this:
+\documentclass{article}
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+
+% use Times
+\usepackage{times}
+% For figures
+\usepackage{graphicx} % more modern
+%\usepackage{epsfig} % less modern
+\usepackage{subfigure} 
+
+% For citations
+\usepackage{natbib}
+
+% For algorithms
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+% As of 2011, we use the hyperref package to produce hyperlinks in the
+% resulting PDF.  If this breaks your system, please commend out the
+% following usepackage line and replace \usepackage{icml2015} with
+% \usepackage[nohyperref]{icml2015} above.
+\usepackage{hyperref}
+
+% Packages hyperref and algorithmic misbehave sometimes.  We can fix
+% this with the following command.
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Employ the following version of the ``usepackage'' statement for
+% submitting the draft version of the paper for review.  This will set
+% the note in the first column to ``Under review.  Do not distribute.''
+\usepackage{icml2015} 
+
+% Employ this version of the ``usepackage'' statement after the paper has
+% been accepted, when creating the final version.  This will set the
+% note in the first column to ``Proceedings of the...''
+%\usepackage[accepted]{icml2015}
+
+
+% The \icmltitle you define below is probably too long as a header.
+% Therefore, a short form for the running title is supplied here:
+\icmltitlerunning{Yelp Challenge: Culture Trend}
+
+\begin{document} 
+
+\twocolumn[
+\icmltitle{Yelp Challenge: Culture Trend}
+
+\icmlauthor{Yuanjian Lai}{lai.yua@husky.neu.edu}
+\icmladdress{Northeastern University,
+ 360 Huntington Ave, Boston, MA 02110}
+\icmlauthor{Zhikai Ding}{ding.zhika@husky.neu.edu}
+\icmladdress{Northeastern University,
+           360 Huntington Ave, Boston, MA 02110}
+
+% You may provide any keywords that you 
+% find helpful for describing your paper; these are used to populate 
+% the "keywords" metadata in the PDF but will not be shown in the document
+\icmlkeywords{boring formatting information, machine learning, ICML}
+
+\vskip 0.3in
+]
+
+\section{Introduction}
+
+
+This project will perform a yelp dataset challenge based on the dataset provided by yelp. The main goal is to use machine learning technologies and concepts to predict Yelp rating base on the mixture of features from dataset and generated from review text analyzing. 
+
+\section{Related Work}
+
+Both predicting the rating from business information and review text analyzing have been explored. And achieved quite good result. 
+
+For feature selection, methods including univariate Feature Selection, recursive Feature Elimination, tree-Based Feature Selection are used to generate powerful features. 
+
+For prediction models, Support Vector Machine, Multinomial Logistic Regression, Multinomial Naive Bayes, Gaussian Discriminant Analysis, Decision Trees and Random Forest Classifier, Linear Regression with Regularization, Support Vector Regression are tried and achieved about 46% accuray. 
+
+For review text analyzing, techniques as Latent Dirichlet Allocation (LDA), Non-negative Matrix Factorization (NMF) and models like LR - Logistic Regression, NB - Multinomial Naive Bayes and  AB - AdaBoost are tried. 
+
+
+
+
+\section{Dataset}
+The dataset is provided by yelp, which is a new version of iteration of its main business -- business info, user info, reviews and comments on different business from users.
+\begin{itemize}
+\item Input:\hfill \\The input is the business data from yelp, which contains different features that the business have
+\item Ouput:\hfill \\ The output is the stars(rating) of the business (rounded to half star)
+\end{itemize}
+\subsection{Data Size}
+Basically, the dataset contains 2.2M reviews and 591K tips by 552K users for 77K business.
+566K business attributes (e.g. hours, parking availability, ambience etc.) are given.
+The 552K users are connect with a social network, which is a graph 3.5M edges.
+
+\subsection{Data Fomat}
+The data is given in Json format and in four different types:
+
+\begin{itemize}
+\item \textbf{Business:}
+\\ \{
+\\ \tab   "type": 'business',
+\\ \tab "business" : (encrypted business id),
+\\ \tab "name": (business name),
+\\ \tab "neighborhoods": [(hood names)],
+\\ \tab "full\_address" : (localized address),
+\\ \tab    "city": (city),
+\\ \tab    "state": (state),
+\\ \tab    "latitude": latitude,
+\\ \tab    "longitude": longitude,
+\\ \tab    "stars": (star rating, rounded to half-stars),
+\\ \tab    "review\_count": review count,
+\\ \tab    "categories": [(localized category names)]
+\\ \tab    "open": True / False (corresponds to
+\\ \tab      closed, not business hours),
+\\ \tab    "hours": \{
+\\ \tab        (day\_of\_week): \{
+\\ \tab            "open": (HH:MM),
+\\ \tab \},
+\\ \tab... \},
+\\ \},
+
+
+\item \textbf{Review:}
+\\ \{
+\\ \tab     "type": "review",
+\\ \tab     "business\_id": (encrypted business id),
+\\ \tab     "user\_id": (encrypted user id),
+\\ \tab     "stars": (star rating, rounded to half-
+\\ \tab         stars),
+\\ \tab     "text": (review text),
+\\ \tab     "date": (date, formatted like
+\\ \tab         "2012-03-14"),
+\\ \tab     "votes": {(vote type): (count)},
+\\ \tab \}
+\item \textbf{User:} \hfill 
+\\	\{
+\\ \tab	    'type': 'user',
+\\ \tab	    'user\_id': (encrypted user id),
+\\ \tab	    'name': (first name),
+\\ \tab	    'review\_count': (review count),
+\\ \tab	    'average\_stars': (floating point average, like 4.31),
+\\ \tab	    'votes': {(vote type): (count)},
+\\ \tab	    'friends': [(friend user\_ids)],
+\\ \tab	    'elite': [(years\_elite)],
+\\ \tab	    'yelping\_since': (date, formatted like '2012-03'),
+\\ \tab	    'compliments': \{
+\\ \tab	        (compliment\_type): (num\_compliments\_of\_this\_type),
+\\ \tab	        ...
+\\ \tab	    \},
+\\ \tab	    'fans': (num\_fans),
+\\ \}
+\item \textbf{Check-in:} \hfill \\ \{
+\\ \tab	    'type': 'checkin',
+\\ \tab	    'business\_id': (encrypted business id),
+\\ \tab	    'checkin\_info': \{
+\\ \tab	        '0-0': (number of checkins from 00:00 to 01:00 on all Sundays),
+\\ \tab	        '1-0': (number of checkins from 01:00 to 02:00 on all Sundays),
+\\ \tab	        ...
+\\ \tab	        '14-4': (number of checkins from 14:00 to 15:00 on all Thursdays),
+\\ \tab	        ...
+\\ \tab	        '23-6': (number of checkins from 23:00 to 00:00 on all Saturdays)
+\\ \tab	    \}, \# if there was no checkin for a hour-day block it will not be in the dict
+\\ \}
+\item \textbf{Tip:} \hfill 
+\\ \{
+\\ \tab	    'type': 'tip',
+\\ \tab	    'text': (tip text),
+\\ \tab	    'business\_id': (encrypted business id),
+\\ \tab	    'user\_id': (encrypted user id),
+\\ \tab	    'date': (date, formatted like '2012-03-14'),
+\\ \tab	    'likes': (count),
+\\ \}
+
+\end{itemize}
+
+\subsection{Data Source}
+As stated in the yelp's website, those data came from 10 cities across 4 countries:
+\begin{itemize}
+
+\item \textbf{U.K.}: Edinburgh
+\item \textbf{Germany}: Karlsruhe
+\item \textbf{Canada}: Montreal and Waterloo
+\item \textbf{U.S.}: Pittsburgh, Charlotte, Urbana-Champaign, Phoenix, Las Vegas,
+ Madison
+  \end{itemize}
+  
+\subsection{Why The Dataset}
+To evaluate the relationship between culture and business trend, we need a relatively large size of data to train the machine. Yelp is a well known review website contains huge amount of not only the information about the business, but also the check-in count(which is a excellent representation of the trend during a time), and the user's rating, comments etc. With those data, we can perform different machine learning skills to find out the target. And the final result should be explicit as well as matches our common sense.
+
+
+
+\section{Methodology} 
+
+\subsection{Business Preference Based on Cities}
+We know that people from different cities have different habit. In some big cities driving tend to be a necessary traveling option for customer (e.g. cities in the Silicon Valley, Los Angeles etc.), but in some other cities it is not necessary the case (e.g. Boston and New York). Hence, in different cities, people have different attitude toward business's parking availability and traveling distance. By comparing the influence of different factors' on user's rating, we can find out which factor matters most, in different cities.
+
+Firstly, we will sort the business based on the business type (different business should have different required features, while 24 hrs opening  is a good feature for fitness center and restaurant, it is not necessary for a school).
+
+Secondly, we will divide the dataset into two parts. Part 1 which is 80% of the dataset will be used as the training data. And the remaining part 2 will be used to test. The test and training data should be well-distributed in cities.
+
+Thirdly, we will perform different machine learning technologies to training the classifier.
+
+Finally, we will use the classifier to predict the test data (the business's average rating)
+
+\section{Evaluation}
+Basically we want to use Precision, Recall, F-Score and Accuracy to evaluate our classifier. 
+
+\end{document} 
+
+
+% This document was modified from the file originally made available by
+% Pat Langley and Andrea Danyluk for ICML-2K. This version was
+% created by Lise Getoor and Tobias Scheffer, it was slightly modified  
+% from the 2010 version by Thorsten Joachims & Johannes Fuernkranz, 
+% slightly modified from the 2009 version by Kiri Wagstaff and 
+% Sam Roweis's 2008 version, which is slightly modified from 
+% Prasad Tadepalli's 2007 version which is a lightly 
+% changed version of the previous year's version by Andrew Moore, 
+% which was in turn edited from those of Kristian Kersting and 
+% Codrina Lauth. Alex Smola contributed to the algorithmic style files.  
