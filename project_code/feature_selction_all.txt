@@ -1,0 +1,144 @@
+77445
+0 review_count
+1 Delivery
+2 Take-out
+3 Drive-Thru
+4 Good For Dancing
+5 Caters
+6 Waiter Service
+7 Corkage
+8 Has TV
+9 BYOB
+10 Dogs Allowed
+11 Happy Hour
+12 Order at Counter
+13 Wheelchair Accessible
+14 Outdoor Seating
+15 Coat Check
+16 By Appointment Only
+17 Takes Reservations
+18 Accepts Credit Cards
+19 Good for Kids
+20 Good For Groups
+21 Price Range
+22 Wi-Fi
+23 Smoking
+24 Attire
+25 Alcohol
+26 Noise Level
+27 garage
+28 street
+29 validated
+30 lot
+31 valet
+32 touristy
+33 hipster
+34 romantic
+35 divey
+36 intimate
+37 trendy
+38 upscale
+39 classy
+40 casual
+41 dessert
+42 latenight
+43 lunch
+44 dinner
+45 breakfast
+46 brunch
+21738
+0 False
+1 False
+2 False
+3 True
+4 False
+5 False
+6 False
+7 False
+8 False
+9 False
+10 True
+11 True
+12 False
+13 True
+14 False
+15 False
+16 True
+17 False
+18 False
+19 False
+20 False
+21 False
+22 False
+23 False
+24 False
+25 False
+26 False
+27 False
+28 True
+29 True
+30 True
+31 False
+32 False
+33 False
+34 False
+35 False
+36 False
+37 False
+38 False
+39 False
+40 False
+41 True
+42 False
+43 False
+44 False
+45 True
+46 False
+0 37
+1 19
+2 16
+3 1
+4 25
+5 2
+6 26
+7 13
+8 15
+9 24
+10 1
+11 1
+12 5
+13 1
+14 23
+15 3
+16 1
+17 28
+18 8
+19 27
+20 14
+21 20
+22 38
+23 31
+24 36
+25 4
+26 34
+27 6
+28 1
+29 1
+30 1
+31 17
+32 10
+33 11
+34 21
+35 22
+36 30
+37 32
+38 9
+39 35
+40 33
+41 1
+42 7
+43 18
+44 29
+45 1
+46 12
+[Finished in 148.8s]
