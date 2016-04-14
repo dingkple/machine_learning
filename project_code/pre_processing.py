@@ -5,7 +5,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn import metrics
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.metrics import mean_squared_error
-from sklearn import svm
+
 from sklearn.cluster import KMeans
 import numpy as np
 import json
@@ -330,7 +330,12 @@ def map_original_data(file_whole_path):
         # print len(d.keys())
         if 'Restaurants' in d['categories'] and 'Price Range' in d['attributes']:
             X.append(transform_main_value(d))
-            Y.append(int(d['stars'] * 2))
+
+            stars = int(d['stars'])
+            double_star = stars * 2
+
+            # Y.append(stars)
+            Y.append(stars)
     labels = get_labels()
     for i,buz in enumerate(X):
         buz.append(labels[i])
@@ -353,8 +358,6 @@ def feature_select(X, Y):
         print i, k
         if k == 1:
             selected_keys.add(keyname_map[i])
-
-
 
     # return rfe
     # print(rfe.support_)   
@@ -427,11 +430,9 @@ def read_data(dir_path = DATA_DIR):
 
 
 def RFE_example(X, y):
-
-
     # Create the RFE object and compute a cross-validated score.
-    # svc = SVC(kernel="linear")
-    clf = LogisticRegression(solver='lbfgs', multi_class='multinomial', C=4)
+    clf = SVC(kernel="linear")
+    # clf = LogisticRegression(solver='lbfgs', multi_class='multinomial', C=4)
     # The "accuracy" scoring is proportional to the number of correct
     # classifications
     rfecv = RFECV(estimator=clf, step=1, cv=StratifiedKFold(y, 2),
@@ -446,6 +447,7 @@ def RFE_example(X, y):
     plt.ylabel("Cross validation score (nb of correct classifications)")
     plt.plot(range(1, len(rfecv.grid_scores_) + 1), rfecv.grid_scores_)
     plt.show()
+    return rfecv
 
 
 def main():

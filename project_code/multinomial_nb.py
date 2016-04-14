@@ -4,20 +4,39 @@ from sklearn import tree
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import mean_squared_error
 from sklearn import cross_validation
+from sklearn import svm
+import math
 
 import sys
 
 import pre_processing as pp
 
+SCORER_ACC = 'accuracy'
+SCORER_RMSE = 'mean_squared_error'
+
+SCORER = SCORER_RMSE
 
 
 def calculate_RMSE(y_pred, y_true):
     return mean_squared_error(y_true, y_pred)**0.5
 
+def print_accuracy_scores(scores):
+    print "Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2)
+
+def print_RMSE(scores):
+    for i, s in enumerate(scores):
+        scores[i] = (-1 * s) ** 0.5
+    print "RMSE: %0.2f " % (scores.mean())
+
 def crossvalidation(clf, X, Y):
-    scores = cross_validation.cross_val_score(clf, X, Y, cv=5, scoring='mean_squared_error')
-    print scores
-    print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
+
+    scores = cross_validation.cross_val_score(clf, X, Y, cv=5, scoring=SCORER)
+    if SCORER == SCORER_ACC:
+        print_accuracy_scores(scores)
+    else:
+        print_RMSE(scores)
+    
+    
 
 def MNB_test(x, y):
     print 'MNB test'
@@ -110,7 +129,13 @@ def main():
     else:
         x, y = pp.read_data()
 
-    func_list = [MLR_test, tree_test, random_forest_test]
+    func_list = [MNB_test, MLR_test, tree_test, random_forest_test]
+
+    # func_list = [MNB_test]
+
+    # func_list = [svm_test]
+
+
     # random_forest_test(x, y)
     # MNB_test(x, y)
 
