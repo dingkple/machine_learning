@@ -6,6 +6,7 @@ from sklearn import metrics
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.metrics import mean_squared_error
 from sklearn import svm
+from sklearn.cluster import KMeans
 import numpy as np
 import json
 import sys
@@ -59,8 +60,8 @@ DATA_DIR = '/Users/kingkz/Downloads/yelp_dataset_challenge_academic_dataset/'
 
 main_value_map = {
     'review_count': 'num' ,\
-    'longitude': 'num' ,\
-    'latitude': 'num' ,\
+    # 'longitude': 'num' ,\
+    # 'latitude': 'num' ,\
 }
 
 attribute_map = {
@@ -204,6 +205,12 @@ name_count = 0
     # print(model.feature_importances_)
 
 data_map_container = {}
+location_lst = []
+def get_labels():
+    model = KMeans(n_clusters=10)
+    np.array(location_lst)
+    model.fit(location_lst)
+    return map(lambda x: 1<<x, model.labels_)
 
 def add_value_map_to_num(dst, data, key_name, value_list):
     global name_printed
@@ -215,7 +222,6 @@ def add_value_map_to_num(dst, data, key_name, value_list):
         dst.append(data_map_container[key_name][data[key_name]])
     else:
         dst.append(value_list.index('N/A'))
-
 
 def add_value(dst, data, key_name, value_map):
     # print key_name, data
@@ -281,6 +287,7 @@ def transform_main_value(data):
         add_value(rst, data, '', main_value_map)
 
     transform_atrribute(rst, data['attributes'])
+    location_lst.append(np.array([data['longitude'],data['latitude']]))
 
     return rst
 
@@ -309,6 +316,9 @@ def map_original_data(file_whole_path):
         if 'Restaurants' in d['categories'] and 'Price Range' in d['attributes']:
             X.append(transform_main_value(d))
             Y.append(int(d['stars'] * 2))
+    labels = get_labels()
+    for i,buz in enumerate(X):
+        buz.append(labels[i])
 
     print len(X)
 
