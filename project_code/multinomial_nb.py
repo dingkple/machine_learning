@@ -3,22 +3,31 @@ from sklearn.linear_model import LogisticRegression
 from sklearn import tree
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import mean_squared_error
+from sklearn import cross_validation
 
 import sys
 
 import pre_processing as pp
 
 
+
 def calculate_RMSE(y_pred, y_true):
     return mean_squared_error(y_true, y_pred)**0.5
+
+def crossvalidation(clf, X, Y):
+    scores = cross_validation.cross_val_score(clf, X, Y, cv=5, scoring='mean_squared_error')
+    print scores
+    print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
 
 def MNB_test(x, y):
     print 'MNB test'
     train_x, train_y, test_x, test_y = pp.split_data_set(x, y)
 
     clf = MultinomialNB()
-    clf.fit(train_x, train_y)
+    crossvalidation(clf, x, y)
 
+
+    clf.fit(train_x, train_y)
     rst = clf.predict(test_x)
     print calculate_RMSE(rst, test_y)
     print pp.print_mean_median(rst)
@@ -27,10 +36,12 @@ def MLR_test(x, y):
     print 'MLR test'    
     train_x, train_y, test_x, test_y = pp.split_data_set(x, y)
     clf = LogisticRegression(solver='lbfgs', multi_class='multinomial', C=4)
+    crossvalidation(clf, x, y)
+
+
+
     clf.fit(train_x, train_y)
-
     rst = clf.predict(test_x)
-
     print calculate_RMSE(rst, test_y)
     print pp.print_mean_median(rst)
 
@@ -39,8 +50,10 @@ def tree_test(x, y):
     print 'DecisionTree'
     train_x, train_y, test_x, test_y = pp.split_data_set(x, y)
     clf = tree.DecisionTreeClassifier()
-    clf.fit(train_x, train_y)
+    crossvalidation(clf, x, y)
 
+
+    clf.fit(train_x, train_y)
     rst = clf.predict(test_x)
 
     train_rst = clf.predict(train_x)
@@ -60,7 +73,11 @@ def svm_test(x, y):
     tol=0.001, verbose=False)
 
     print 'fitting: '
+    crossvalidation(clf, x, y)
+
+
     clf.fit(train_x, train_y)
+
     print 'predicting: '
     rst = clf.predict(test_x)
     # print sum(rst == test_y) / len(test_y) * 1.0
@@ -74,6 +91,8 @@ def random_forest_test(x, y):
     train_x, train_y, test_x, test_y = pp.split_data_set(x, y)
 
     clf = RandomForestClassifier()
+
+    crossvalidation(clf, x, y)
 
     clf.fit(train_x, train_y)
     rst = clf.predict(test_x)

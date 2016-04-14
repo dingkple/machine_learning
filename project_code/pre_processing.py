@@ -10,6 +10,13 @@ from sklearn.cluster import KMeans
 import numpy as np
 import json
 import sys
+from scipy import stats
+
+import matplotlib.pyplot as plt
+from sklearn.svm import SVC
+from sklearn.cross_validation import StratifiedKFold
+from sklearn.feature_selection import RFECV
+from sklearn.datasets import make_classification
 
 TRACE = True
 
@@ -159,6 +166,8 @@ good_for_map = {
 
 name_printed = False
 name_count = 0
+keyname_map = {}
+selected_keys = set()
 
 # \item Accept Insurance: False:2,
 # NA: 23402, We Ignore this attribute
@@ -219,7 +228,12 @@ def add_value_map_to_num(dst, data, key_name, value_list):
     if key_name not in data_map_container:
         data_map_container[key_name] = translate_one_hop(value_list)
     if key_name in data:
-        dst.append(data_map_container[key_name][data[key_name]])
+
+        #using one-hop encoding
+        # dst.append(data_map_container[key_name][data[key_name]])
+
+        #Map value to its index
+        dst.append(value_list.index(data[key_name]))
     else:
         dst.append(value_list.index('N/A'))
 
@@ -278,6 +292,7 @@ def transform_atrribute(rst, data):
 def print_key_name(k):
     global name_count
     print name_count, k
+    keyname_map[name_count] = k 
     name_count += 1
 
 def transform_main_value(data):
@@ -336,7 +351,13 @@ def feature_select(X, Y):
         print i, k
     for i, k in enumerate(rfe.ranking_):
         print i, k
-    # print(rfe.support_)
+        if k == 1:
+            selected_keys.add(keyname_map[i])
+
+
+
+    # return rfe
+    # print(rfe.support_)   
     # print(rfe.ranking_)
 
 
@@ -359,7 +380,7 @@ def feature_s_v2(X, Y):
     #     print a
 
 def print_mean_median(a):
-    print 'mean median: ', np.mean(a), np.median(a)
+    print 'mean mode: ', np.mean(a), stats.mode(a, axis=None)
 
 
 def split_data_set(X, Y):
@@ -404,6 +425,29 @@ def read_data(dir_path = DATA_DIR):
     X, Y = map_original_data(fp)
     return X, Y
 
+
+def RFE_example(X, y):
+
+
+    # Create the RFE object and compute a cross-validated score.
+    # svc = SVC(kernel="linear")
+    clf = LogisticRegression(solver='lbfgs', multi_class='multinomial', C=4)
+    # The "accuracy" scoring is proportional to the number of correct
+    # classifications
+    rfecv = RFECV(estimator=clf, step=1, cv=StratifiedKFold(y, 2),
+                  scoring='accuracy')
+    rfecv.fit(X, y)
+
+    print("Optimal number of features : %d" % rfecv.n_features_)
+
+    # Plot number of features VS. cross-validation scores
+    plt.figure()
+    plt.xlabel("Number of features selected")
+    plt.ylabel("Cross validation score (nb of correct classifications)")
+    plt.plot(range(1, len(rfecv.grid_scores_) + 1), rfecv.grid_scores_)
+    plt.show()
+
+
 def main():
     if len(sys.argv) > 1:
         X, Y = read_data(sys.argv[1])
@@ -413,6 +457,7 @@ def main():
 
     # feature_select(X, Y)
     # feature_s_v2(X, Y)
+    RFE_example(X, Y)
 
 # split_data_set(X, Y)
 
