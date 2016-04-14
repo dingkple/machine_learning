@@ -10,6 +10,8 @@ import numpy as np
 import json
 import sys
 
+TRACE = True
+
 DATA_DIR = '/Users/kingkz/Downloads/yelp_dataset_challenge_academic_dataset/'
 
 # VALUE_TYPE = {
@@ -353,7 +355,7 @@ def print_mean_median(a):
 def split_data_set(X, Y):
     train_num = int(len(X) * 0.75)
     train_x, train_y, test_x, test_y = X[:train_num, :], Y[:train_num], X[train_num: , :], Y[train_num:]
-    print print_mean_median(test_y)
+    # print print_mean_median(test_y)
     return train_x, train_y, test_x, test_y
 
 def svm_test(X, Y):
@@ -381,6 +383,8 @@ def sum_rst(rst, dst):
     return l * 1.0 / len(rst)
 
 def read_data(dir_path = DATA_DIR):
+    if TRACE:
+        print 'Reading data: '
     file_name = 'yelp_academic_dataset_business.json'
     if dir_path[-1] != '/':
         dir_path += '/'
