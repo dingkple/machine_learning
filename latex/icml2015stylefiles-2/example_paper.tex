@@ -17,6 +17,7 @@
 
 % For citations
 \usepackage{natbib}
+\bibliographystyle{unsrtnat}
 
 % For algorithms
 \usepackage{algorithm}
@@ -35,22 +36,21 @@
 % Employ the following version of the ``usepackage'' statement for
 % submitting the draft version of the paper for review.  This will set
 % the note in the first column to ``Under review.  Do not distribute.''
-\usepackage{icml2015} 
+% \usepackage{icml2015} 
 
 % Employ this version of the ``usepackage'' statement after the paper has
 % been accepted, when creating the final version.  This will set the
 % note in the first column to ``Proceedings of the...''
-%\usepackage[accepted]{icml2015}
-
+\usepackage[accepted]{icml2015}
 
 % The \icmltitle you define below is probably too long as a header.
 % Therefore, a short form for the running title is supplied here:
-\icmltitlerunning{Yelp Challenge: Culture Trend}
+\icmltitlerunning{Yelp Challenge: Rating Prediction}
 
 \begin{document} 
 
 \twocolumn[
-\icmltitle{Yelp Challenge: Culture Trend}
+\icmltitle{Yelp Challenge: Rating Prediction}
 
 \icmlauthor{Yuanjian Lai}{lai.yua@husky.neu.edu}
 \icmladdress{Northeastern University,
@@ -72,18 +72,22 @@
 
 This project will perform a yelp dataset challenge based on the dataset provided by yelp. The main goal is to use machine learning technologies and concepts to predict Yelp rating base on the mixture of features from dataset and generated from review text analyzing. 
 
+\section{Novelty}
+Yelp is the hottest business review website among the world. It basically helps people (especially for those that have no experience on the business) to have direct information from peers, and therefore customers can make better decisions. Based on Yelp, a new pattern of consumption has been created. However, while customers benefit from Yelp, business owner, on the other hand, can also utilize this mediate platform to optimize itself. When the business owners decide to launch a new business, they may want to have knowledge about what features they should focus on (or be inclined to) to enhance the average user experience. Based on this assumption, we believe machine learning is a good way to create the solutions.
+
 \section{Related Work}
 
 Both predicting the rating from business information and review text analyzing have been explored. And achieved quite good result. 
 
 For feature selection, methods including univariate Feature Selection, recursive Feature Elimination, tree-Based Feature Selection are used to generate powerful features. 
 
-For prediction models, Support Vector Machine, Multinomial Logistic Regression, Multinomial Naive Bayes, Gaussian Discriminant Analysis, Decision Trees and Random Forest Classifier, Linear Regression with Regularization, Support Vector Regression are tried and achieved about 46% accuray. 
+For prediction models, Support Vector Machine, Multinomial Logistic Regression, Multinomial Naive Bayes, Gaussian Discriminant Analysis, Decision Trees and Random Forest Classifier, Linear Regression with Regularization, Support Vector Regression are tried and achieved about 46\% accuray. \cite{YelpPrediction} 
 
-For review text analyzing, techniques as Latent Dirichlet Allocation (LDA), Non-negative Matrix Factorization (NMF) and models like LR - Logistic Regression, NB - Multinomial Naive Bayes and  AB - AdaBoost are tried. 
+For review text analyzing, techniques as Latent Dirichlet Allocation (LDA), Non-negative Matrix Factorization (NMF) and models like LR - Logistic Regression, NB - Multinomial Naive Bayes and  AB - AdaBoost are tried. \cite{yelpreviewtext} 
 
+Here what we want to do is to combine the prediction from review text and the features of business itself, most of the previous work focused on either review text(mainly sentimental analyze) or business features (such as parking, child-friendly, wheelchair-friendly). A paper from Standford mentioned their way of combining these two by extracting features from review-text and mix them with features directly from dataset, but there is still plenty of work for optimizing. 
 
-
+Based on their efforts, our work will focus on investigating the generation of new features based on review text and user data that may hold predictive power. In particular, combining analyzing review text to develop new features or stronger models for sentiment analysis. In addition to sentiment, user data could also be analyzed to gather other features about the business that can be improved. We will also try some pre-processing method such as sorting businesses into categories before running predictions to see if there is difference. 
 
 \section{Dataset}
 The dataset is provided by yelp, which is a new version of iteration of its main business -- business info, user info, reviews and comments on different business from users.
@@ -195,12 +199,53 @@ To evaluate the relationship between culture and business trend, we need a relat
 
 \section{Methodology} 
 
-\subsection{Business Preference Based on Cities}
-We know that people from different cities have different habit. In some big cities driving tend to be a necessary traveling option for customer (e.g. cities in the Silicon Valley, Los Angeles etc.), but in some other cities it is not necessary the case (e.g. Boston and New York). Hence, in different cities, people have different attitude toward business's parking availability and traveling distance. By comparing the influence of different factors' on user's rating, we can find out which factor matters most, in different cities.
+
+\section{Sort Type}
+There are various tracks for businesses(i.e. restaurant, barber shop), it is apparent that businesses in different tracks share very different features. While parking maybe a fundamental feature for supermarkets, it is not necessarily the same for a cafe store. Mixing all the businesses together regardless their business type will no doubt introduce much noise into our training data. Hence, we may want to sort the business by their categories and train different models for each of the category. A very naive way is using unsupervised clustering to sort the data. On the other hand, notice that we have much information from the dataset itself (business, category and type for the business data), we might utilize those data to sort it as well. We will find out which is better during the project.
+
+
+\subsection{Models}
+
+We will try the tested models on the dataset, and improve the accuracy by adding more features depending on their type. If time allows, we will try more complicated models like Neural Networks or Adaboost \cite{Andrew1}. The contents below are mainly from wikipedia. \cite{wiki}
+
+\begin{itemize}
+
+\item Multinomial Logistic Regression
+
+multinomial logistic regression is a classification method that generalizes logistic regression to multiclass problems, i.e. with more than two possible discrete outcomes.[1] That is, it is a model that is used to predict the probabilities of the different possible outcomes of a categorically distributed dependent variable, given a set of independent variables (which may be real-valued, binary-valued, categorical-valued, etc.).
+
+\item Multinomial Naive Bayes
+
+naive Bayes classifiers are a family of simple probabilistic classifiers based on applying Bayes' theorem with strong (naive) independence assumptions between the features.
+
+\item Gaussian Discriminant Analysis
+
+Gaussian Discriminant Analysis(Also called Linear discriminant analysis (LDA)) is a generalization of Fisher's linear discriminant, a method used in statistics, pattern recognition and machine learning to find a linear combination of features that characterizes or separates two or more classes of objects or events. The resulting combination may be used as a linear classifier, or, more commonly, for dimensionality reduction before later classification.
+
+\item Decision Trees and Random Forest Classifier
+
+Random forests is a notion of the general technique of random decision forests[1][2] that are an ensemble learning method for classification, regression and other tasks, that operate by constructing a multitude of decision trees at training time and outputting the class that is the mode of the classes (classification) or mean prediction (regression) of the individual trees. Random decision forests correct for decision trees' habit of overfitting to their training set.
+
+\item Linear Regression with Regularization
+
+linear regression is an approach for modeling the relationship between a scalar dependent variable y and one or more explanatory variables (or independent variables) denoted X. The case of one explanatory variable is called simple linear regression. For more than one explanatory variable, the process is called multiple linear regression
+
+\item Support Vector Machine
+
+support vector machines (SVMs, also support vector networks[1]) are supervised learning models with associated learning algorithms that analyze data used for classification and regression analysis. Given a set of training examples, each marked for belonging to one of two categories, an SVM training algorithm builds a model that assigns new examples into one category or the other, making it a non-probabilistic binary linear classifier. 
+
+\item Support Vector Regression. 
+
+The model produced by support vector classification (as described above) depends only on a subset of the training data, because the cost function for building the model does not care about training points that lie beyond the margin. Analogously, the model produced by SVR depends only on a subset of the training data, because the cost function for building the model ignores any training data close to the model prediction. 
+
+
+\end{itemize}
+
+\subsection{Workflow}
 
 Firstly, we will sort the business based on the business type (different business should have different required features, while 24 hrs opening  is a good feature for fitness center and restaurant, it is not necessary for a school).
 
-Secondly, we will divide the dataset into two parts. Part 1 which is 80% of the dataset will be used as the training data. And the remaining part 2 will be used to test. The test and training data should be well-distributed in cities.
+Secondly, we will divide the dataset into two parts. Part 1 which is 80\% of the dataset will be used as the training data. And the remaining part 2 will be used to test. The test and training data should be well-distributed in cities.
 
 Thirdly, we will perform different machine learning technologies to training the classifier.
 
@@ -208,6 +253,8 @@ Finally, we will use the classifier to predict the test data (the business's ave
 
 \section{Evaluation}
 Basically we want to use Precision, Recall, F-Score and Accuracy to evaluate our classifier. 
+
+\bibliography{example_paper}
 
 \end{document} 
 
